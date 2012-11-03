@@ -1,0 +1,97 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class=metanav>
+  {% if not session.author_logged_in %}
+  <a href="{{ url_for('login') }}">Log In</a>
+  {% else %}
+  <a href="{{ url_for('logout') }}">Log Out</a>
+  {% endif %}
+</div>
+
+
+
+{% if session.author_logged_in %}
+
+{% if error %}<p class="error"><strong>Message:</strong> {{ error }}{% endif %}
+
+<!-- EXTERNAL LINKS -->
+<div class="extlinks">
+  {% if session.admin_logged_in %}
+  <a href="{{url_for('admin_page')}}">Admin Page</a> <span class="separator"> || </span>
+  {% endif %}
+
+  <a href="{{url_for('reader_page')}}">Reader Page</a> 
+</div>
+
+
+<!--  DISPALY FORM-->
+<h2 style="text-align:center; margin-bottom:7px;">Add Book </h2>
+<div class="patch">
+  <form action="{{ url_for('add_book_entry') }}" method="post" class="add-entry" enctype="multipart/form-data">
+    <dl>
+      <dt>Book Name</dt>
+      <dd><input type="text" size="30" name="bookname" required /></dd>
+      <br />
+
+      <dt>Author</dt>
+      <dd><input type="text" size="30" name="author" required /></dd>
+      <br />
+
+      <dt>ISBN</dt>
+      <dd><input type="text" size="30" name="isbn" required /></dd>
+      <br />
+
+      <dt>Description</dt>
+      <dd><textarea name="description" rows="10" required></textarea></dd>
+      <br />
+      <dt>Upload E-Book</dt>
+      <dd><input type="file" name="file"/></dd>
+      <br /><br />
+      <dd><div class="center"><input class="submit" type="submit" value="Enter"/></div></dd>
+    </dl>
+  </form>
+</div>
+
+<br />
+<hr />
+<hr />
+<br />
+
+
+<!-- DISPLAY BOOK TABLE -->
+<table>
+  <caption>Book Entries</caption>
+  <thead>
+    <th>Book Name</th>
+    <th>Author</th>
+    <th>Description</th>
+    <th>ISBN</th>
+    <th>e-Book</th>
+  </thead>
+
+  <tbody>
+
+    {% for entry in entries %}
+    <tr>
+      <td>{{ entry.bookname }}</td>
+      <td>{{ entry.author }}</td>
+      <td>{{ entry.description }}</td>
+      <td>{{ entry.isbn }}</td>
+      <td><a href="https://s3.amazonaws.com/alk-pesit/ebooks/{{entry.isbn}}.pdf">Download</a></td>
+      {% if session.admin_logged_in %}
+      <td><a href="{{ url_for('delete_book', del_book_isbn = entry.isbn) }}">Delete</a>
+        {% endif %}
+      </tr>
+      {% else %}
+      <tr><td colspan="4">Unbelievable.  No entries here so far</td></tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+
+  {% else %}
+  <p class="error"><strong>Message:</strong> You are not authorised! Log in as author!!
+
+    {% endif %}
+    {% endblock %}

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h2>Login</h2>
+<img src="../static/bookstack2.jpg" width="200px" height="200px" style="float:left; margin-left:20%;"/>
+{% if error %}<p class="loginerror"><strong>Error:</strong> {{ error }}{% endif %}
+
+<div class="login">
+  <form action="{{ url_for('login') }}" method="post">
+    <dl>
+      <dt>Username</dt>
+      <dd><input type="text" name="username" required /></dd>
+      <br />
+      <dt>Password</dt>
+      <dd><input type="password" name="password" required /></dd>
+      <br />
+      <dd><input class="submit" type="submit" value="Login"></dd>
+    </dl>
+  </form>
+</div>
+
+{% endblock %}

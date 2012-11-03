@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+{% block body %}
+
+
+<div class=metanav>
+  {% if not session.reader_logged_in %}
+  <a href="{{ url_for('login') }}">Log In</a>
+  {% else %}
+  <a href="{{ url_for('logout') }}">Log Out</a>
+  {% endif %}
+</div>
+
+
+
+{% if session.reader_logged_in %}
+
+{% if error %}<p class="error"><strong>Message:</strong> {{ error }}{% endif %}
+
+<!-- EXTERNAL LINKS -->
+<div class="extlinks">
+  {% if session.admin_logged_in %}
+  <a href="{{url_for('admin_page')}}">Admin Page</a> <span class="separator"> || </span>
+  {% endif %}
+
+  {% if session.author_logged_in %}
+  <a href="{{url_for('author_page')}}">Author Page</a> 
+  {% endif %}
+</div>
+
+<!-- DISPLAY BOOK TABLE -->
+<div style=" margin-left:auto; margin-right:auto; padding:20px; width:700px;">
+  <table>
+    <caption>Book Entries</caption>
+    <thead>
+      <th>Book Name</th>
+      <th>Author</th>
+      <th>Description</th>
+      <th>ISBN</th>
+      <th>e-Book</th>
+    </thead>
+
+    <tbody>
+
+      {% for entry in entries %}
+      <tr>
+        <td>{{ entry.bookname }}</td>
+        <td>{{ entry.author }}</td>
+        <td>{{ entry.description }}</td>
+        <td>{{ entry.isbn }}</td>
+        <td><a href="https://s3.amazonaws.com/alk-pesit/ebooks/{{entry.isbn}}.pdf">Download</a></td>
+      </tr>
+      {% else %}
+      <tr><td colspan="4">Unbelievable.  No entries here so far</td></tr>
+      {% endfor %}
+
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<p class="error"><strong>Message:</strong> You are not authorised! You must be logged in!!
+
+  {% endif %}
+  {% endblock %}

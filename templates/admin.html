@@ -1,0 +1,85 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class=metanav>
+  {% if not session.admin_logged_in %}
+  <a href="{{ url_for('login') }}">Log In</a>
+  {% else %}
+  <a href="{{ url_for('logout') }}">Log Out</a>
+  {% endif %}
+</div>
+
+
+
+{% if session.admin_logged_in %}
+
+{% if error %}<p class="error"><strong>Message:</strong> {{ error }}{% endif %}
+
+<!-- EXTERNAL LINKS -->
+<div class="extlinks">
+  <a href="{{url_for('author_page')}}">Author Page</a> <span class="separator"> || </span>
+  <a href="{{url_for('reader_page')}}">Reader Page</a>
+</div>
+
+<!--  DISPALY FORM-->
+<h2 style="text-align:center; margin-bottom:7px;">Add User </h2>
+<div class="patch" style="width:400px;">
+  <form action="{{ url_for('add_user_entry') }}" method="post" class="add-entry">
+    <dl>
+      <dt>User Name</dt>
+      <dd><input type="text" size="30" name="username" required></dd>
+      <br />
+      <dt>Password</dt>
+      <dd><input type="text" size="30" name="password" required></dd>
+      <br />
+      <dt>Type of User</dt>
+      <dd><select name="type">
+        <option value="Author">Author</option>
+        <option value="Reader">Reader</option>
+      </select></dd>
+      <br />
+      <dd><input class="submit" type="submit" value="Add User"></dd>
+    </dl>
+  </form>
+</div>
+
+<br />
+<hr />
+<hr />
+<br />
+
+<!-- DISPLAY USER TABLE -->
+
+<table>
+  <caption>User Table</caption>
+
+  <thead>
+    <th>User Name</th>
+    <th>Password</th>
+    <th>User Type</th>
+    <th>Delete User?</th>
+  </thead>
+
+  <tbody>
+
+    {% for entry in entries %}
+    <tr>
+      <td>{{ entry.username }}</td>
+      <td>{{ entry.password }}</td>
+      <td>{{ entry.type }}</td>
+      <td><a href="{{ url_for('delete_user_entry', del_username = entry.username) }}">Delete</a></td>
+
+    </tr>
+    {% else %}
+    <tr><td colspan="4">Unbelievable.  No entries here so far</td></tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+
+{% else %}
+<p class="error"><strong>Message:</strong> You are not authorised! Log in as admin!!
+
+  {% endif %}
+
+  {% endblock %}
