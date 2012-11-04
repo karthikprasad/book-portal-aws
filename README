@@ -1,6 +1,6 @@
 BOOK PORTAL ON AWS
 (karthikprasad@engineer.com)
 
-A simple web portal for hosting e-books.
-Main aim was to understand thw working of Amazon Cloud Services.
-Built using Flask framework of python.
+A simple web portal for uploading/downloading e-books. 
+The main aim was to familiarize with the Cloud services offered by Amazon.
+The web application was developed using Python and Flask Framework.
